@@ -5,120 +5,261 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clustering Music Genres</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      max-width: 800px;
-      margin: 60px auto;
-      padding: 0 24px;
-      color: #222;
-      line-height: 1.7;
+      background: #121212;
+      color: #fff;
     }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 4px;
+    /* TOP BAR */
+    .topbar {
+      background: #000;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .subtitle {
-      color: #888;
-      margin-bottom: 32px;
-      font-size: 0.95rem;
+    .topbar-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
     }
 
+    .topbar a {
+      background: #1db954;
+      color: #000;
+      padding: 8px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .topbar a:hover { background: #1ed760; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(180deg, #1e3a1e 0%, #121212 100%);
+      padding: 60px 32px 40px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 span { color: #1db954; }
+
+    .hero p {
+      color: #b3b3b3;
+      font-size: 1rem;
+      max-width: 500px;
+      margin-bottom: 28px;
+    }
+
+    .hero-meta {
+      color: #b3b3b3;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .hero-meta span { color: #fff; font-weight: 600; }
+
+    /* CONTENT */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 32px;
+    }
+
+    /* SECTION HEADERS */
     h2 {
-      font-size: 1.1rem;
-      margin-top: 40px;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #1db954;
-      padding-bottom: 4px;
-      display: inline-block;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      margin-top: 48px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #282828;
     }
 
-    p { color: #444; margin-bottom: 12px; }
-
-    ul { padding-left: 20px; color: #444; }
-    ul li { margin-bottom: 6px; }
-
-    table {
+    /* TRACK LIST STYLE */
+    .tracklist {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 16px;
-      font-size: 0.9rem;
     }
 
-    th {
+    .tracklist thead tr {
+      border-bottom: 1px solid #282828;
+    }
+
+    .tracklist th {
+      padding: 8px 16px;
       text-align: left;
-      padding: 10px 12px;
-      background: #f5f5f5;
-      font-size: 0.8rem;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #666;
+      color: #b3b3b3;
     }
 
-    td {
-      padding: 10px 12px;
-      border-bottom: 1px solid #eee;
-      color: #333;
+    .tracklist td {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      color: #b3b3b3;
+      border-bottom: 1px solid #1a1a1a;
     }
 
-    .best { color: #1db954; font-weight: 600; }
-    .bad { color: #e74c3c; }
+    .tracklist tr:hover td { background: #1a1a1a; }
 
-    code {
-      background: #f5f5f5;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.88rem;
-      font-family: monospace;
+    .tracklist td:first-child { color: #b3b3b3; width: 40px; text-align: center; }
+    .tracklist td.name { color: #fff; font-weight: 500; }
+    .tracklist td.green { color: #1db954; font-weight: 600; }
+    .tracklist td.red { color: #e74c3c; }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
     }
 
-    pre {
-      background: #f5f5f5;
-      padding: 16px;
+    .card {
+      background: #181818;
       border-radius: 8px;
-      font-size: 0.88rem;
-      overflow-x: auto;
-      margin: 10px 0;
+      padding: 20px;
+      transition: background 0.2s;
     }
 
-    a { color: #1db954; }
+    .card:hover { background: #282828; }
 
-    footer {
-      margin-top: 60px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-      color: #aaa;
+    .card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .card p { font-size: 0.8rem; color: #b3b3b3; }
+
+    /* IMAGES */
+    .graph-wrap { margin-bottom: 32px; }
+    .graph-label { font-size: 0.8rem; color: #b3b3b3; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .graph-wrap img { width: 100%; border-radius: 8px; display: block; }
+    .graph-wrap p { font-size: 0.8rem; color: #535353; margin-top: 8px; }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    /* FINDINGS */
+    .findings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .finding {
+      background: #181818;
+      border-radius: 8px;
+      padding: 20px;
+      border-left: 3px solid #1db954;
+    }
+
+    .finding h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .finding p { font-size: 0.8rem; color: #b3b3b3; }
+
+    /* CODE */
+    pre {
+      background: #181818;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: monospace;
       font-size: 0.85rem;
+      color: #1db954;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid #282828;
+      padding: 32px;
+      text-align: center;
+      color: #535353;
+      font-size: 0.82rem;
+      margin-top: 60px;
+    }
+
+    footer a { color: #1db954; text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
+      .two-up { grid-template-columns: 1fr; }
+      .findings { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Clustering Music Genres</h1>
-  <p class="subtitle">Noelia Canela & Ethan Ferguson — CS 472 Final Project</p>
+<div class="topbar">
+  <span class="topbar-title">Music Clustering</span>
+  <a href="https://github.com/noeliacanela229/music-genre-clustering" target="_blank">GitHub</a>
+</div>
+
+<div class="hero">
+  <div style="max-width: 900px; margin: 0 auto; padding: 0 0px;">
+    <h1>Clustering <span>Music</span> Genres</h1>
+    <p>Can a clustering algorithm figure out music genres on its own just from audio data — no labels, no hints?</p>
+    <div class="hero-meta">
+      By <span>Noelia Canela</span> & <span>Ethan Ferguson</span>
+      &nbsp;&nbsp;·&nbsp;&nbsp;
+      <span>32,828</span> songs &nbsp;·&nbsp; <span>6</span> genres &nbsp;·&nbsp; <span>6</span> algorithms
+    </div>
+  </div>
+</div>
+
+<div class="content">
 
   <h2>What We Did</h2>
-  <p>We wanted to see if a clustering algorithm could figure out music genres on its own just from audio data — no labels, no hints. We used a Spotify dataset with about 32,000 songs and ran 6 different clustering algorithms to compare which one works best.</p>
-
-  <h2>Dataset</h2>
-  <p>TidyTuesday Spotify dataset — 32,828 songs across 6 genres (edm, rap, pop, r&b, latin, rock). Loads automatically from a URL so no download needed.</p>
-  <p>Features used: danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo</p>
+  <p style="color: #b3b3b3; margin-bottom: 24px;">We took a Spotify dataset with 32,000+ songs and tried to see if clustering algorithms could discover genre structure just from audio features like tempo, energy, danceability, and loudness — without ever being told what genres exist. We ran 6 different algorithms and compared them.</p>
 
   <h2>Algorithms</h2>
-  <ul>
-    <li>K-Means</li>
-    <li>K-Means++</li>
-    <li>K-Medoids</li>
-    <li>DBSCAN</li>
-    <li>GMM (Gaussian Mixture Model)</li>
-    <li>Hierarchical Clustering</li>
-  </ul>
+  <div class="cards">
+    <div class="card">
+      <h3>K-Means</h3>
+      <p>Our baseline. Assigns each song to its nearest cluster center.</p>
+    </div>
+    <div class="card">
+      <h3>K-Means++</h3>
+      <p>Same as K-Means but picks smarter starting points.</p>
+    </div>
+    <div class="card">
+      <h3>K-Medoids</h3>
+      <p>Uses actual songs as centers instead of averages.</p>
+    </div>
+    <div class="card">
+      <h3>DBSCAN</h3>
+      <p>Groups by density. Labels songs that don't fit as noise.</p>
+    </div>
+    <div class="card">
+      <h3>GMM</h3>
+      <p>Gives each song a probability for each cluster instead of a hard pick.</p>
+    </div>
+    <div class="card">
+      <h3>Hierarchical</h3>
+      <p>Builds a tree showing how songs and genres relate.</p>
+    </div>
+  </div>
 
   <h2>Results</h2>
-  <table>
+  <table class="tracklist">
     <thead>
       <tr>
+        <th>#</th>
         <th>Algorithm</th>
         <th>Silhouette Score</th>
         <th>Notes</th>
@@ -126,60 +267,116 @@
     </thead>
     <tbody>
       <tr>
-        <td class="best">K-Means</td>
-        <td class="best">0.1384</td>
+        <td>1</td>
+        <td class="name green">K-Means</td>
+        <td class="green">0.1384</td>
         <td>Best performer</td>
       </tr>
       <tr>
-        <td class="best">K-Means++</td>
-        <td class="best">0.1384</td>
+        <td>2</td>
+        <td class="name green">K-Means++</td>
+        <td class="green">0.1384</td>
         <td>Tied for best</td>
       </tr>
       <tr>
-        <td>Hierarchical</td>
+        <td>3</td>
+        <td class="name">Hierarchical</td>
         <td>0.0992</td>
-        <td>5k sample</td>
+        <td>Ran on 5k sample</td>
       </tr>
       <tr>
-        <td>K-Medoids</td>
+        <td>4</td>
+        <td class="name">K-Medoids</td>
         <td>0.0841</td>
         <td></td>
       </tr>
       <tr>
-        <td>GMM</td>
-        <td class="bad">-0.0176</td>
+        <td>5</td>
+        <td class="name">GMM</td>
+        <td class="red">-0.0176</td>
         <td>Soft assignments didn't fit</td>
       </tr>
       <tr>
-        <td>DBSCAN</td>
-        <td class="bad">N/A</td>
+        <td>6</td>
+        <td class="name">DBSCAN</td>
+        <td class="red">N/A</td>
         <td>46 clusters, 16,606 noise points</td>
       </tr>
     </tbody>
   </table>
 
+  <h2>Graphs</h2>
+
+  <div class="two-up">
+    <div class="graph-wrap">
+      <div class="graph-label">Elbow Method</div>
+      <img src="elbow_curve.png" alt="Elbow curve">
+      <p>Curve flattens at K=8 — that's where we stopped adding clusters.</p>
+    </div>
+    <div class="graph-wrap">
+      <div class="graph-label">Silhouette Scores</div>
+      <img src="silhouette_comparison.png" alt="Silhouette comparison">
+      <p>K-Means and K-Means++ tied at 0.1384.</p>
+    </div>
+  </div>
+
+  <div class="graph-wrap">
+    <div class="graph-label">All 6 Algorithms — Songs Colored by Genre</div>
+    <img src="pca_all_algorithms.png" alt="All 6 PCA plots">
+    <p>Each dot is a song colored by its real genre. DBSCAN is mostly grey noise points compared to the others.</p>
+  </div>
+
+  <div class="two-up">
+    <div class="graph-wrap">
+      <div class="graph-label">Feature Distributions</div>
+      <img src="feature_distributions.png" alt="Feature distributions">
+      <p>Speechiness and instrumentalness are both skewed heavily toward zero.</p>
+    </div>
+    <div class="graph-wrap">
+      <div class="graph-label">Correlation Matrix</div>
+      <img src="correlation_matrix.png" alt="Correlation matrix">
+      <p>Energy and loudness correlate at 0.68 — strongest relationship in the data.</p>
+    </div>
+  </div>
+
+  <div class="graph-wrap">
+    <div class="graph-label">Average Audio Features per Cluster</div>
+    <img src="cluster_heatmap.png" alt="Cluster heatmap">
+    <p>Cluster 5 stands out — tempo of 169 BPM vs 110-125 for everything else.</p>
+  </div>
+
   <h2>Key Findings</h2>
-  <ul>
-    <li>K-Means and K-Means++ tied for best at 0.1384</li>
-    <li>DBSCAN completely failed — music genres aren't dense enough for density-based clustering</li>
-    <li>GMM went negative — hard assignments worked better than soft probabilities for this data</li>
-    <li>Cluster 5 had a tempo of 169 BPM — way faster than all other clusters which averaged 110–125</li>
-    <li>Energy and loudness are highly correlated at 0.68 — explains why EDM and rock end up close together</li>
-  </ul>
+  <div class="findings">
+    <div class="finding">
+      <h3>K-Means Won</h3>
+      <p>Tied with K-Means++ at 0.1384. Simple distance-based clustering worked best.</p>
+    </div>
+    <div class="finding">
+      <h3>DBSCAN Failed</h3>
+      <p>Labeled over half the songs as noise. Music genres blend too much for density-based methods.</p>
+    </div>
+    <div class="finding">
+      <h3>Features Overlap</h3>
+      <p>Energy and loudness at 0.68 correlation — explains why EDM and rock cluster together.</p>
+    </div>
+    <div class="finding">
+      <h3>Cluster 5 Stood Out</h3>
+      <p>169 BPM average tempo — noticeably faster than every other cluster.</p>
+    </div>
+  </div>
 
   <h2>How to Run</h2>
+  <p style="color: #b3b3b3; margin-bottom: 8px;">The dataset downloads automatically from a URL — no manual setup needed.</p>
   <pre>pip install -r requirements.txt
 python3 music_genre_clustering.py</pre>
-  <p>The dataset downloads automatically. Close each plot window as it pops up so it keeps running.</p>
+  <p style="color: #535353; font-size: 0.8rem; margin-top: 10px;">Close each plot window as it pops up so the script keeps running.</p>
 
-  <h2>Links</h2>
-  <ul>
-    <li><a href="https://github.com/noeliacanela229/music-genre-clustering">GitHub Repository</a></li>
-  </ul>
+</div>
 
-  <footer>
-    Noelia Canela & Ethan Ferguson — CS 472 Unsupervised Machine Learning
-  </footer>
+<footer>
+  <p>Noelia Canela & Ethan Ferguson</p>
+  <p style="margin-top: 8px;"><a href="https://github.com/noeliacanela229/music-genre-clustering" target="_blank">GitHub Repository</a></p>
+</footer>
 
 </body>
 </html>
